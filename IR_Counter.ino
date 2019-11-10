@@ -1,4 +1,5 @@
-/**** Counter using a dual 7-Segment-Display with common anoden and an Infrared Sensor Module.*****/
+/**** Counter using a dual 7-Segment-Display with common anodes and an Infrared Sensor Module.*****/
+/***** MStronik.blog *****************************************************************************/
 // Define the cathode pins for the 7-Segment Display:
 #define a 10
 #define b 9
@@ -28,7 +29,7 @@ void setup() {
   } 
   pinMode(Dig1, OUTPUT);
   pinMode(Dig2, OUTPUT);
-  Null();
+  all_OFF();
   //Serial.begin(9600);
 }
 
@@ -61,9 +62,15 @@ void loop() {
 }
 
 /***************** FUNCTIONS ******************************************/
-void Null(){
+void all_OFF(){
   for(int i = 0; i<7;i++){
     digitalWrite(Seg_Array[i],HIGH);
+  }
+}
+
+void all_ON (){
+  for(int i = 0; i<7;i++){
+    digitalWrite(Seg_Array[i],LOW);
   }
 }
 
@@ -81,83 +88,70 @@ void show_Units(int digit)
   show_Digit(digit);
 }
 
-
+// if cathode pin is HIGH: Segment will be OFF !
+// Seg_Array[] = {a, b, c, d, e, f, g}
+//         index: 0, 1, 2, 3, 4, 5, 6
 void show_Digit(int digit)
 {int i;
   switch (digit){
      case 0:
-       for( i = 0; i<6;i++){
-         digitalWrite(Seg_Array[i],LOW);
-       }
+       all_ON();
+       // turn OFF Segment G:
        digitalWrite(Seg_Array[6],HIGH);
        break;
      case 1:
-       Null();
+       all_OFF();
+       // turn ON Segment B and C:
        digitalWrite(Seg_Array[1],LOW);
        digitalWrite(Seg_Array[2],LOW);
        break;
      case 2:
-        Null();
-       digitalWrite(Seg_Array[0],LOW);
-       digitalWrite(Seg_Array[1],LOW);
-       digitalWrite(Seg_Array[6],LOW);
-       digitalWrite(Seg_Array[4],LOW);
-       digitalWrite(Seg_Array[3],LOW);
+       all_ON();
+       // turn OFF Segment C and F:
+       digitalWrite(Seg_Array[2],HIGH);
+       digitalWrite(Seg_Array[5],HIGH);
        break; 
      case 3:
-       Null();
-       digitalWrite(Seg_Array[0],LOW);
-       digitalWrite(Seg_Array[1],LOW);
-       digitalWrite(Seg_Array[6],LOW);
-       digitalWrite(Seg_Array[2],LOW);
-       digitalWrite(Seg_Array[3],LOW);
+       all_ON();
+       // turn OFF Segment E and F:
+       digitalWrite(Seg_Array[4],HIGH);
+       digitalWrite(Seg_Array[5],HIGH);
        break; 
      case 4:
-       Null();
-       digitalWrite(Seg_Array[5],LOW);
-       digitalWrite(Seg_Array[6],LOW);
-       digitalWrite(Seg_Array[1],LOW);
-       digitalWrite(Seg_Array[2],LOW);
+       all_ON();
+       // turn OFF Segment A, D and E:
+       digitalWrite(Seg_Array[0],HIGH);
+       digitalWrite(Seg_Array[3],HIGH);
+       digitalWrite(Seg_Array[4],HIGH);
        break; 
      case 5:
-       Null();
-       digitalWrite(Seg_Array[0],LOW);
-       digitalWrite(Seg_Array[5],LOW);
-       digitalWrite(Seg_Array[6],LOW);
-       digitalWrite(Seg_Array[2],LOW);
-       digitalWrite(Seg_Array[3],LOW);
+       all_ON();
+       // turn OFF Segment B and E:
+       digitalWrite(Seg_Array[1],HIGH);
+       digitalWrite(Seg_Array[4],HIGH);
        break; 
      case 6:
-       Null();
-       digitalWrite(Seg_Array[0],LOW);
-       digitalWrite(Seg_Array[5],LOW);
-       digitalWrite(Seg_Array[4],LOW);
-       digitalWrite(Seg_Array[3],LOW);
-       digitalWrite(Seg_Array[2],LOW);
-       digitalWrite(Seg_Array[6],LOW);
+       all_ON();
+       // turn OFF Segment B:
+       digitalWrite(Seg_Array[1],HIGH);
        break;  
      case 7:
-       Null();
+       all_OFF();
+       // turn ON Segment A, B and C:
        digitalWrite(Seg_Array[0],LOW);
        digitalWrite(Seg_Array[1],LOW);
        digitalWrite(Seg_Array[2],LOW);
        break;  
      case 8:
-       for(i = 0; i<7;i++){
-         digitalWrite(Seg_Array[i],LOW);
-       }
+       all_ON();
        break; 
      case 9:
-       Null();
-       digitalWrite(Seg_Array[0],LOW);
-       digitalWrite(Seg_Array[1],LOW);
-       digitalWrite(Seg_Array[2],LOW);
-       digitalWrite(Seg_Array[3],LOW);
-       digitalWrite(Seg_Array[5],LOW);
-       digitalWrite(Seg_Array[6],LOW);
+       all_ON();
+       // turn OFF Segment E:
+       digitalWrite(Seg_Array[4],HIGH);
        break;    
      default:
-       Null();
+       all_OFF();
        break;              
   }
   
