@@ -66,9 +66,9 @@ void show_number(int tens,int units){
   start_time = millis(); 
     for(unsigned long t_elapsed = 0; t_elapsed < 1000; t_elapsed = millis()-start_time){
       show_Tens(tens);
-      delay(1);
+      delay(5);
       show_Units(units);
-      delay(1);
+      delay(5);
         }
 }
 void all_OFF(){
