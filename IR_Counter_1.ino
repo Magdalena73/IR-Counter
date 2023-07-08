@@ -1,4 +1,4 @@
-/**** Counter using a dual 7-Segment-Display with common anodes and an Infrared Sensor Module.*****/
+/**** Counter using a dual 7-Segment-Display 5621BS with common anodes and an Infrared Sensor Module.*****/
 /***** MStronik.blog *****************************************************************************/
 // Define the cathode pins for the 7-Segment Display:
 #define a 10 //pin 10 in SSD
@@ -17,13 +17,13 @@ int Seg_Array[7] = {a,b,c,d,e,f,g};
 int SensorPin = A0;
 int SensorValue, last_SensorVal;
 int counter, Units, Tens;
-int sensorHigh = 50;
-bool flag_count, last_state;
 
+bool flag_count, last_state;
+unsigned long start_time; 
 
 void setup() {
   counter = 0;
-  last_SensorVal = 0;
+  last_SensorVal = true;
   flag_count = false;
   pinMode(SensorPin, INPUT);
   for( int i = 0; i<7;i++){
@@ -32,16 +32,24 @@ void setup() {
   pinMode(Dig1, OUTPUT);
   pinMode(Dig2, OUTPUT);
   all_OFF();
-  Serial.begin(9600);
+  //Serial.begin(9600);
 }
 
 void loop() {
-    
+  Tens = int(counter/10);
+  Units = int(counter%10); 
+  start_time = millis(); 
+  for(unsigned long t_elapsed = 0; t_elapsed < 700; t_elapsed = millis()-start_time){
+      show_Units(Units);
+      delay(5);
+      show_Tens(Tens);
+      delay(5);
+     }
   SensorValue = analogRead(SensorPin);
-  Serial.println(SensorValue);
-  delay(100);
+  //Serial.println(SensorValue);
+  //delay(500);
   
-  if (SensorValue < sensorHigh ) { // if the sensor is active
+  if ((SensorValue < 70 )||(flag_count != last_state)){ // if the sensor is active
     flag_count = true;
     counter++;
     if(counter > 99)
@@ -50,13 +58,9 @@ void loop() {
   else{
     flag_count = false;
     }
-  Tens = int(counter/10);
-  Units = int(counter%10); 
-  if (last_SensorVal != SensorValue){
-     show_number(Tens, Units);
-   }   
+    
   last_state = flag_count;  
-  last_SensorVal = SensorValue;
+ 
 }
 
 /***************** FUNCTIONS ******************************************/
@@ -64,7 +68,7 @@ void loop() {
 void show_number(int tens,int units){
   unsigned long start_time;
   start_time = millis(); 
-    for(unsigned long t_elapsed = 0; t_elapsed < 1000; t_elapsed = millis()-start_time){
+    for(unsigned long t_elapsed = 0; t_elapsed < 500; t_elapsed = millis()-start_time){
       show_Tens(tens);
       delay(5);
       show_Units(units);
@@ -72,6 +76,8 @@ void show_number(int tens,int units){
         }
 }
 void all_OFF(){
+  digitalWrite(Dig1, LOW);
+  digitalWrite(Dig2, LOW);
   for(int i = 0; i<7;i++){
     digitalWrite(Seg_Array[i],HIGH);
   }
